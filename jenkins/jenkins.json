@@ -1,0 +1,36 @@
+{
+    "builders": [{
+      "type": "amazon-ebs",
+      "region": "us-east-1",
+      "instance_type": "m5.large",
+      "ssh_username": "ec2-user",
+      "source_ami": "ami-0b898040803850657",
+      "ami_name": "updated-jenkins-ami {{timestamp}}"
+    }],
+    "provisioners": [{
+        
+            "type": "shell",
+            "inline": [
+                "sudo yum update -y",
+                "sudo yum install java-1.8.0-openjdk-devel -y",
+                "curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo",
+                "sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key ",
+                "sudo yum install jenkins -y",
+                "sudo systemctl enable jenkins",
+                "sudo systemctl start jenkins"
+                "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtt6yPMUUAEuEGT8nk2zXH4t5YcmfPTNNyMfUXxYRmdrfYRMvxG3Aj9bFuxwcVrGVNr+sFgV2Tyh8n/RnFCJ6yu2/Olsgts7LRyaD1numN+bEfHz6+oNpNi7mqSFJ034hq6og/+GD3izM9xNUnfdR755QAVleklLBwbTjrkUV15x5lp59arrA28GQXUfOx8MU10FGMhcYy23pZDovBK6uB0y8ouHjG9XZrN1muEedanm+5273DLz0hA/MNmnRRcMYGNnroU9p3rS19DfYRJgLPwdFX7m9fYYiG1v/760QTPE0cLFAtehUXDKbpvpe1GcccSe8duLeRFoHk7NdC62aP root@ip-172-31-18-52.us-east-2.compute.internal
+                ' | tee /root/.ssh/authorized_keys"
+            ]
+          },
+          
+          {
+            "type": "file",
+            "source": "test_file",
+            "destination": "/tmp/test_file"
+          },
+          {
+            "type": "breakpoint"     
+          }
+
+     ]
+  }
